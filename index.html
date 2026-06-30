@@ -1,1 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>D&T Live Events Calendar</title>
 
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script>
+    const e = React.createElement;
+
+    const events = [
+      {
+        title: "Future of D&T (VR, AI, 3D Printing)",
+        date: "2026-07-16",
+        time: "09:30"
+      },
+      {
+        title: "GCSE All Set",
+        date: "2026-09-15",
+        time: "16:00"
+      },
+      {
+        title: "GCSE Assessment Insights",
+        date: "2026-09-16",
+        time: "16:00"
+      },
+      {
+        title: "A Level All Set",
+        date: "2026-09-17",
+        time: "16:00"
+      },
+      {
+        title: "D&T Network (Oak)",
+        date: "2026-10-12",
+        time: "16:00"
+      },
+      {
+        title: "D&T Network (CAD)",
+        date: "2026-10-19",
+        time: "16:00"
+      }
+    ];
+
+    function Calendar() {
+      const [month, setMonth] = React.useState(6); // July
+
+      const monthNames = [
+        "Jan","Feb","Mar","Apr","May","Jun",
+        "Jul","Aug","Sep","Oct","Nov","Dec"
+      ];
+
+      const year = 2026;
+
+      const getDays = () => {
+        const first = new Date(year, month, 1);
+        const last = new Date(year, month + 1, 0);
+        const days = [];
+
+        for (let i = 1; i <= last.getDate(); i++) {
+          days.push(i);
+        }
+
+        return days;
+      };
+
+      const getEvents = (day) => {
+        return events.filter(ev => {
+          const d = new Date(ev.date);
+          return d.getMonth() === month && d.getDate() === day;
+        });
+      };
+
+      return e("div", { className: "p-6 font-sans" },
+        e("h1", { className: "text-3xl font-bold mb-4" }, "D&T Live Events Calendar"),
+
+        // Month controls
+        e("div", { className: "mb-4 flex gap-3" },
+          e("button", {
+            onClick: () => setMonth(m => m - 1),
+            className: "px-3 py-2 bg-gray-200 rounded"
+          }, "←"),
+
+          e("span", { className: "text-xl font-bold" },
+            monthNames[month] + " " + year
+          ),
+
+          e("button", {
+            onClick: () => setMonth(m => m + 1),
+            className: "px-3 py-2 bg-gray-200 rounded"
+          }, "→")
+        ),
+
+        // Calendar grid
+        e("div", { className: "grid grid-cols-7 gap-2" },
+          getDays().map(day =>
+            e("div", {
+              key: day,
+              className: "border p-2 min-h-[80px]"
+            },
+              e("div", { className: "font-bold" }, day),
+
+              getEvents(day).map((ev, i) =>
+                e("div", {
+                  key: i,
+                  className: "text-xs mt-1 bg-blue-100 p-1 rounded"
+                }, ev.time + " " + ev.title)
+              )
+            )
+          )
+        )
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(e(Calendar));
+  </script>
+</body>
+</html>
+``
